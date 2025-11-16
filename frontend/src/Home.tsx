@@ -1,8 +1,9 @@
-// src/pages/Home.tsx
-import { useEffect } from "react";
-import ProductPage from "./Product"; 
-import CartPanel from "./Cart";
+// src/Home.tsx
+import { useOutletContext } from "react-router-dom";
+import products from "./Product";
+import type { CartContextType } from "./components/layout";
 
+// (Interface Product อยู่ใน Product.tsx แล้ว แต่ถ้าต้องการก็ประกาศซ้ำได้)
 interface Product {
   id: number;
   name: string;
@@ -10,24 +11,14 @@ interface Product {
   price: number;
 }
 
-interface CartItem extends Product {
-  qty: number;
-}
+export default function Home() {
+  // 3. รับ state จาก Layout ผ่าน useOutletContext
+  const { setCart } = useOutletContext<CartContextType>();
 
-interface HomeProps {
-  cart: CartItem[];
-  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
-}
-
-export default function Home({ cart, setCart }: HomeProps) {
-
-  // บันทึก cart ลง localStorage ทุกครั้งที่เปลี่ยน
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+  // 4. ลบ useEffect และ state ทั้งหมดออก (ย้ายไป Layout แล้ว)
 
   const addToCart = (id: number) => {
-    const product = ProductPage.find((p: Product) => p.id === id);
+    const product = products.find((p: Product) => p.id === id); // 5. FIX: ใช้ 'products'
     if (!product) return;
 
     setCart((prev) => {
@@ -42,25 +33,24 @@ export default function Home({ cart, setCart }: HomeProps) {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-blue-50 to-white">
-      <header className="bg-blue-700 text-white p-4 flex justify-between items-center">
-        <h1 className="font-bold text-xl">🛍️ ร้านค้า傻逼</h1>
-        <div className="flex gap-2">
-          <a href="/register" className="bg-yellow-400 text-black px-3 py-1 rounded-lg font-semibold">
-            สมัครบัญชี
-          </a>
-          <a href="/cart" className="bg-green-500 text-white px-3 py-1 rounded-lg font-semibold">
-            ดูตะกร้า
-          </a>
-        </div>
-      </header>
+    <div className="bg-gradient-to-br from-blue-50 to-white">
+      {/* 6. FIX: ลบ <header> ออก (ย้ายไป Layout แล้ว) */}
 
       <main className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {ProductPage.map((p: Product) => (
-          <div key={p.id} className="bg-white shadow rounded-xl p-4 flex flex-col gap-2">
-            <img src={p.img} alt={p.name} className="w-full h-48 object-cover rounded" />
+        {products.map((p: Product) => ( // 7. FIX: ใช้ 'products.map'
+          <div
+            key={p.id}
+            className="bg-white shadow rounded-xl p-4 flex flex-col gap-2"
+          >
+            <img
+              src={p.img}
+              alt={p.name}
+              className="w-full h-48 object-cover rounded"
+            />
             <h3 className="font-semibold">{p.name}</h3>
-            <p className="text-blue-600 font-bold">฿{p.price.toLocaleString()}</p>
+            <p className="text-blue-600 font-bold">
+              ฿{p.price.toLocaleString()}
+            </p>
             <button
               onClick={() => addToCart(p.id)}
               className="bg-blue-700 text-white py-2 rounded hover:bg-blue-800"
@@ -70,8 +60,8 @@ export default function Home({ cart, setCart }: HomeProps) {
           </div>
         ))}
       </main>
-
-      <CartPanel cart={cart} setCart={setCart} />
+      
+      {/* 8. FIX: ลบ <CartPanel> ออก (มันเป็นหน้าของตัวเอง) */}
     </div>
   );
 }

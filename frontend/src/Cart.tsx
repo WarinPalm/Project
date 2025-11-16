@@ -1,17 +1,11 @@
-interface CartItem {
-  id: number;
-  name: string;
-  img: string;
-  price: number;
-  qty: number;
-}
+// src/Cart.tsx
+import { useOutletContext, Link } from "react-router-dom";
+import type { CartContextType } from "./components/layout";
 
-interface CartProps {
-  cart: CartItem[];
-  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
-}
+export default function CartPanel() {
+  // 1. รับ cart และ setCart มาจาก Layout ผ่าน useOutletContext
+  const { cart, setCart } = useOutletContext<CartContextType>();
 
-export default function CartPanel({ cart, setCart }: CartProps) {
   const removeItem = (id: number) => {
     setCart((prev) => prev.filter((i) => i.id !== id));
   };
@@ -19,7 +13,8 @@ export default function CartPanel({ cart, setCart }: CartProps) {
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
 
   return (
-    <div className="bg-white shadow-lg rounded-2xl p-6 mt-6">
+    // (ผมเพิ่ม max-w-2xl mx-auto เพื่อให้มันแสดงผลตรงกลางสวยๆ)
+    <div className="bg-white shadow-lg rounded-2xl p-6 mt-6 max-w-2xl mx-auto">
       <h2 className="font-bold text-2xl mb-4 text-blue-700 flex items-center">
         🛒 ตะกร้าสินค้า
       </h2>
@@ -74,9 +69,13 @@ export default function CartPanel({ cart, setCart }: CartProps) {
             <span>฿{total.toLocaleString()}</span>
           </div>
 
-          <button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-lg font-medium transition">
+          {/* 2. เปลี่ยนจาก <button> เป็น <Link> เพื่อให้ Router ทำงาน */}
+          <Link
+            to="/checkout"
+            className="block w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-lg font-medium transition text-center"
+          >
             ไปชำระเงิน 💳
-          </button>
+          </Link>
         </div>
       )}
     </div>

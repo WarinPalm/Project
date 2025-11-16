@@ -1,4 +1,5 @@
-// src/data/products.ts
+// src/data/products.ts (หรือ src/Product.tsx)
+
 export interface Product {
   id: number;
   name: string;
@@ -46,4 +47,3 @@ const products: Product[] = [
 ];
 
 export default products;
-

@@ -1,39 +1,41 @@
 // src/router.tsx
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-// 1. Import Layout และ หน้าต่างๆ
-import App from "./App.tsx";
-import Home from "./Home.tsx";
-import Cart from "./Cart.tsx";
-import Register from "./Register.tsx";
-import CheckoutPage from "./CheckoutPage.tsx";
+// 1. Import Layout และ Pages
+import Layout from "./components/layout";
+import Home from "./Home";
+import CartPanel from "./Cart";
+import CheckoutPage from "./CheckoutPage";
+import Register from "./Register";
 
-// 2. สร้าง router
-export const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <App />,
-    },
-    {
-        index: true, // index: true หมายถึง path: "/"
+// 2. สร้าง routes แบบ object
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />, // ให้ Layout เป็นตัวหลัก
+    children: [
+      {
+        index: true, // index: true หมายถึง path "/"
         element: <Home />,
-    },
-    {
+      },
+      {
         path: "cart",
-        element: <Cart />,
-    },
-    {
-        path: "register",
-        element: <Register />,
-    },
-    {
+        element: <CartPanel />,
+      },
+      {
         path: "checkout",
         element: <CheckoutPage />,
-    },
-]);\
+      },
+    ],
+  },
+  {
+    // หน้ารับสมัครจะอยู่นอก Layout หลัก (ไม่มี Header)
+    path: "/register",
+    element: <Register />,
+  },
+]);
 
-export default function Router(){
-    return(
-        <RouterProvider router={router}/>
-    )
+// 3. สร้าง Component Router เพื่อส่งออก
+export default function Router() {
+  return <RouterProvider router={router} />;
 }
