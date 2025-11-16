@@ -3,7 +3,6 @@ import { useOutletContext, Link } from "react-router-dom";
 import type { CartContextType } from "./components/layout";
 
 export default function CartPanel() {
-  // 1. รับ cart และ setCart มาจาก Layout ผ่าน useOutletContext
   const { cart, setCart } = useOutletContext<CartContextType>();
 
   const removeItem = (id: number) => {
@@ -13,7 +12,7 @@ export default function CartPanel() {
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
 
   return (
-    // (ผมเพิ่ม max-w-2xl mx-auto เพื่อให้มันแสดงผลตรงกลางสวยๆ)
+
     <div className="bg-white shadow-lg rounded-2xl p-6 mt-6 max-w-2xl mx-auto">
       <h2 className="font-bold text-2xl mb-4 text-blue-700 flex items-center">
         🛒 ตะกร้าสินค้า
